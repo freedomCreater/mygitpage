@@ -5,17 +5,17 @@
   
 
   
-  <title>苟利国家生死以 其因祸福驱避之</title>
+  <title>投石问路</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta property="og:type" content="website">
-<meta property="og:title" content="苟利国家生死以 其因祸福驱避之">
+<meta property="og:title" content="投石问路">
 <meta property="og:url" content="http://yoursite.com/index.html">
-<meta property="og:site_name" content="苟利国家生死以 其因祸福驱避之">
+<meta property="og:site_name" content="投石问路">
 <meta property="og:locale" content="default">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="苟利国家生死以 其因祸福驱避之">
+<meta name="twitter:title" content="投石问路">
   
-    <link rel="alternate" href="/atom.xml" title="苟利国家生死以 其因祸福驱避之" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="投石问路" type="application/atom+xml">
   
   
     <link rel="icon" href="/favicon.png">
@@ -34,12 +34,8 @@
   <div id="header-outer" class="outer">
     <div id="header-title" class="inner">
       <h1 id="logo-wrap">
-        <a href="/" id="logo">苟利国家生死以 其因祸福驱避之</a>
+        <a href="/" id="logo">投石问路</a>
       </h1>
-      
-        <h2 id="subtitle-wrap">
-          <a href="/" id="subtitle">一个老派IT文艺青年的自我修养</a>
-        </h2>
       
     </div>
     <div id="header-inner" class="inner">
@@ -84,7 +80,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/11/15/隆平基础服务平台部署文档/">隆平基础服务平台部署文档</a>
+      <a class="article-title" href="/2018/11/15/隆平基础服务平台部署文档/">基础服务平台部署文档</a>
     </h1>
   
 
@@ -92,23 +88,51 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h1><h2 id="服务器准备"><a href="#服务器准备" class="headerlink" title="服务器准备"></a>服务器准备</h2><ul>
-<li>准备服务器 4台，以下分别以A/B/C/D标记<h2 id="dubbo平台安装"><a href="#dubbo平台安装" class="headerlink" title="dubbo平台安装"></a>dubbo平台安装</h2></li>
+        <h1 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h1><h3 id="服务器准备"><a href="#服务器准备" class="headerlink" title="服务器准备"></a>服务器准备</h3><ul>
+<li>准备服务器 4台，以下分别以A/B/C/D/E标记</li>
+<li>应用服务器规划：</li>
 </ul>
-<ol>
-<li>安装zookeeper<ul>
-<li>在A/B/C三台服务器上安装zookeeper</li>
-<li>将A 服务器设为主节点，B/C设为从属节点</li>
+<table>
+<thead>
+<tr>
+<th>服务器</th>
+<th>部署服务</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>zookeeper主节点/CPI/网关</td>
+</tr>
+<tr>
+<td>B</td>
+<td>zookeeper从属节点/农户服务/客商服务</td>
+</tr>
+<tr>
+<td>C</td>
+<td>zookeeper从属节点/农户服务/客商服务</td>
+</tr>
+<tr>
+<td>D</td>
+<td>zookeeper从属节点/农户服务/客商服务</td>
+</tr>
+<tr>
+<td>E</td>
+<td>CPI/dubbo控制台/网关</td>
+</tr>
+</tbody>
+</table>
+<h3 id="dubbo平台安装"><a href="#dubbo平台安装" class="headerlink" title="dubbo平台安装"></a>dubbo平台安装</h3><ol>
+<li>安装zookeeper（<em>具体安装步骤参考官网资料</em>）<ul>
+<li>安装zookeeper</li>
+<li>编辑配置文件，设置主从节点</li>
 <li>启动zookeeper服务</li>
 </ul>
 </li>
-<li><p>设置配置中心</p>
-<ul>
+<li>设置配置中心<ul>
 <li>启动zookeeper客户端&gt; 建议使用zookeeper监视器（zookeeper-dev-ZooInspector.jar）</li>
 <li>在根目录下建立名称为lpht_cfg_center的目录节点，并在该节点下再建立 test子节点，在test节点下建立bsci_service（接口服务配置）、bsci_client（cpi配置）两个节点</li>
-<li><p>编辑bsci_service节点配置 </p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"><span class="attr">"spring.datasource.url"</span>: <span class="string">"jdbc:oracle:thin:@192.168.128.108:1521:orcl"</span>,</span><br><span class="line"><span class="attr">"spring.datasource.username"</span>: <span class="string">"LPHT_BASE"</span>,</span><br><span class="line"><span class="attr">"spring.datasource.password"</span>: <span class="string">"LPHT_BASE"</span>,</span><br><span class="line"><span class="attr">"farmer.server.port"</span>: <span class="string">"8661"</span>,</span><br><span class="line"><span class="attr">"merchant.server.port"</span>: <span class="string">"8662"</span>,		</span><br><span class="line"><span class="attr">"spring.dubbo.registry.address"</span>:<span class="string">"zookeeper://192.168.129.157:2181?backup=192.168.129.158:2181,192.168.129.161:2181"</span>,</span><br><span class="line"><span class="attr">"farmer.dubbo.port"</span>:<span class="string">"20861"</span>,</span><br><span class="line"><span class="attr">"merchant.dubbo.port"</span>:<span class="string">"20862"</span>,</span><br><span class="line"><span class="attr">"spring.cloud.consul.host"</span>: <span class="string">"192.168.128.134"</span>,</span><br><span class="line"><span class="attr">"spring.cloud.consul.port"</span>: <span class="string">"8500"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>配置项参数说明</strong></p>
+<li>编辑bsci_service节点配置 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">      <span class="attr">"spring.datasource.url"</span>: <span class="string">"jdbc:oracle:thin:@192.168.128.108:1521:orcl"</span>,</span><br><span class="line">      <span class="attr">"spring.datasource.username"</span>: <span class="string">"LPHT_BASE"</span>,</span><br><span class="line">      <span class="attr">"spring.datasource.password"</span>: <span class="string">"LPHT_BASE"</span>,</span><br><span class="line">      <span class="attr">"farmer.server.port"</span>: <span class="string">"8661"</span>,</span><br><span class="line">      <span class="attr">"merchant.server.port"</span>: <span class="string">"8662"</span>,		</span><br><span class="line">      <span class="attr">"spring.dubbo.registry.address"</span>:<span class="string">"zookeeper://192.168.129.157:2181?backup=192.168.129.158:2181,192.168.129.161:2181"</span>,</span><br><span class="line">      <span class="attr">"farmer.dubbo.port"</span>:<span class="string">"20861"</span>,</span><br><span class="line">      <span class="attr">"merchant.dubbo.port"</span>:<span class="string">"20862"</span>,</span><br><span class="line">      <span class="attr">"spring.cloud.consul.host"</span>: <span class="string">"192.168.128.134"</span>,</span><br><span class="line">      <span class="attr">"spring.cloud.consul.port"</span>: <span class="string">"8500"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 </li>
@@ -164,20 +188,92 @@
 </tbody>
 </table>
 <ul>
-<li><p>编辑bsci_client配置</p>
-  <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">	&#123;</span><br><span class="line">    <span class="attr">"auth.clientCode"</span>: <span class="string">"BS_CONFIG_CENTER"</span>, </span><br><span class="line">    <span class="attr">"auth.inLoginUrl"</span>: <span class="string">"http://192.168.128.107:8088/cas/login?service=http://192.168.129.159:9080/bsci/cas&amp;CLIENT_CODE=BS_CONFIG_CENTER"</span>, </span><br><span class="line">    <span class="attr">"auth.outLoginUrl"</span>: <span class="string">"http://192.168.128.107:8088/cas/login?service=http://192.168.129.159:9080/bsci/cas&amp;CLIENT_CODE=BS_CONFIG_CENTER"</span>, </span><br><span class="line">    <span class="attr">"auth.unauthorizedUrl"</span>: <span class="string">"http://localhost:8080/sales/platform/index.do"</span>, </span><br><span class="line">    <span class="attr">"auth.inCasserverUrlPrefix"</span>: <span class="string">"http://192.168.128.107:8088/cas"</span>, </span><br><span class="line">    <span class="attr">"auth.outCasserverUrlPrefix"</span>: <span class="string">"http://192.168.128.107:8088/cas"</span>, </span><br><span class="line">    <span class="attr">"auth.inCasService"</span>: <span class="string">"http://192.168.129.159:9080/bsci/cas"</span>, </span><br><span class="line">    <span class="attr">"auth.outCasService"</span>: <span class="string">"http://192.168.129.159:9080/bsci/cas"</span>, </span><br><span class="line">    <span class="attr">"auth.inLogoutUrl"</span>: <span class="string">"http://192.168.128.107:8088/cas/logout?service=http://192.168.129.159:9080/bsci/logout&amp;CLIENT_CODE=BS_CONFIG_CENTER"</span>, </span><br><span class="line">    <span class="attr">"auth.outLogoutUrl"</span>: <span class="string">"http://192.168.128.107:8088/cas/logout?service=http://192.168.129.159:9080/bsci/logout&amp;CLIENT_CODE=BS_CONFIG_CENTER"</span>, </span><br><span class="line">    <span class="attr">"auth.wsGetUserAuthInfo"</span>: <span class="string">"http://192.168.128.107:8088/sysManager/webservice/authService/getUserInfo"</span>, </span><br><span class="line">    <span class="attr">"auth.ipSegment"</span>: <span class="string">"10.0.0.0-10.255.255.255/172.16.0.0-172.31.255.255/192.0.0.0-192.168.255.255/172.10.0.0-172.31.255.255/127.0.0.1-127.0.0.1"</span>,</span><br><span class="line">    <span class="attr">"userdata.fileUploadPath"</span>:<span class="string">"/home/jiaoqx/app/tempFile"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>  <strong>配置项参数说明</strong><br>配置项 | 说明<br>—- | —-<br>auth.clientCode | 系统管理注册的编码<br>auth.inLoginUrl | 内网sso Url<br>auth.outLoginUrl | 外网 sso url<br>auth.unauthorizedUrl  | 未授权提示页面<br>auth.inCasserverUrlPrefix |  内网cas服务地址前缀<br>auth.outCasserverUrlPrefix | 外网cas服务地址前缀<br>auth.inCasService | 内网cas服务地址<br>auth.outCasService | 外网cas 服务地址<br>auth.inLogoutUrl | 内网单点登出Url<br>auth.outLogoutUrl | 外网单点登出Url<br>auth.wsGetUserAuthInfo | 获取登录权限信息接口<br>auth.ipSegment | 内外网ip判断ip段<br>userdata.fileUploadPath | 文件上传地址 （配置为应用部署服务器的绝对路径）</p>
+<li>编辑bsci_client节点配置<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">      <span class="attr">"auth.clientCode"</span>: <span class="string">"BS_CONFIG_CENTER"</span>, </span><br><span class="line">      <span class="attr">"auth.inLoginUrl"</span>: <span class="string">"http://192.168.128.107:8088/cas/login?service=http://192.168.129.159:9080/bsci/cas&amp;CLIENT_CODE=BS_CONFIG_CENTER"</span>, </span><br><span class="line">      <span class="attr">"auth.outLoginUrl"</span>: <span class="string">"http://192.168.128.107:8088/cas/login?service=http://192.168.129.159:9080/bsci/cas&amp;CLIENT_CODE=BS_CONFIG_CENTER"</span>, </span><br><span class="line">      <span class="attr">"auth.unauthorizedUrl"</span>: <span class="string">"http://localhost:8080/sales/platform/index.do"</span>, </span><br><span class="line">      <span class="attr">"auth.inCasserverUrlPrefix"</span>: <span class="string">"http://192.168.128.107:8088/cas"</span>, </span><br><span class="line">      <span class="attr">"auth.outCasserverUrlPrefix"</span>: <span class="string">"http://192.168.128.107:8088/cas"</span>, </span><br><span class="line">      <span class="attr">"auth.inCasService"</span>: <span class="string">"http://192.168.129.159:9080/bsci/cas"</span>, </span><br><span class="line">      <span class="attr">"auth.outCasService"</span>: <span class="string">"http://192.168.129.159:9080/bsci/cas"</span>, </span><br><span class="line">      <span class="attr">"auth.inLogoutUrl"</span>: <span class="string">"http://192.168.128.107:8088/cas/logout?service=http://192.168.129.159:9080/bsci/logout&amp;CLIENT_CODE=BS_CONFIG_CENTER"</span>, </span><br><span class="line">      <span class="attr">"auth.outLogoutUrl"</span>: <span class="string">"http://192.168.128.107:8088/cas/logout?service=http://192.168.129.159:9080/bsci/logout&amp;CLIENT_CODE=BS_CONFIG_CENTER"</span>, </span><br><span class="line">      <span class="attr">"auth.wsGetUserAuthInfo"</span>: <span class="string">"http://192.168.128.107:8088/sysManager/webservice/authService/getUserInfo"</span>, </span><br><span class="line">      <span class="attr">"auth.ipSegment"</span>: <span class="string">"10.0.0.0-10.255.255.255/172.16.0.0-172.31.255.255/192.0.0.0-192.168.255.255/172.10.0.0-172.31.255.255/127.0.0.1-127.0.0.1"</span>,</span><br><span class="line">      <span class="attr">"userdata.fileUploadPath"</span>:<span class="string">"/home/jiaoqx/app/tempFile"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>auth.clientCode</td>
+<td>系统管理注册的编码</td>
+</tr>
+<tr>
+<td>auth.inLoginUrl</td>
+<td>内网sso Url </td>
+</tr>
+<tr>
+<td>auth.outLoginUrl</td>
+<td>外网 sso url</td>
+</tr>
+<tr>
+<td>auth.unauthorizedUrl</td>
+<td>未授权提示页面</td>
+</tr>
+<tr>
+<td>auth.inCasserverUrlPrefix</td>
+<td>内网cas服务地址前缀</td>
+</tr>
+<tr>
+<td>auth.outCasserverUrlPrefix</td>
+<td>外网cas服务地址前缀</td>
+</tr>
+<tr>
+<td>auth.inCasService</td>
+<td>内网cas服务地址</td>
+</tr>
+<tr>
+<td>auth.outCasService</td>
+<td>外网cas 服务地址</td>
+</tr>
+<tr>
+<td>auth.inLogoutUrl</td>
+<td>内网单点登出Url</td>
+</tr>
+<tr>
+<td>auth.outLogoutUrl</td>
+<td>外网单点登出Url</td>
+</tr>
+<tr>
+<td>auth.wsGetUserAuthInfo</td>
+<td>获取登录权限信息接口</td>
+</tr>
+<tr>
+<td>auth.ipSegment</td>
+<td>内外网ip判断ip段</td>
+</tr>
+<tr>
+<td>userdata.fileUploadPath</td>
+<td>文件上传地址 （配置为应用部署服务器的绝对路径）</td>
+</tr>
+</tbody>
+</table>
 <ol start="3">
-<li>安装dubbo控制台</li>
+<li><p>安装dubbo控制台</p>
+<p>目前版本的管理控制台正在开发中，已经完成了服务查询和服务治理的功能，采用前后端分离的模式，具体的安装和使用步骤如下：</p>
+<p>安装:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/apache/incubator-dubbo-ops.git /var/tmp/dubbo-ops</span><br><span class="line">cd /var/tmp/dubbo-ops</span><br><span class="line">mvn clean package</span><br></pre></td></tr></table></figure>
+<p>配置 :</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">配置文件为：</span><br><span class="line">dubbo-admin-backend/src/main/resources/application.properties</span><br><span class="line">主要的配置有：</span><br><span class="line">dubbo.registry.address=zookeeper://192.168.129.157:2181</span><br></pre></td></tr></table></figure>
+<p>启动:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn --projects dubbo-admin-backend spring-boot:run</span><br></pre></td></tr></table></figure>
+<p>其他配置请访问github中的文档:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/apache/incubator-dubbo-ops</span><br></pre></td></tr></table></figure>
+<p>访问:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1:8080</span><br></pre></td></tr></table></figure>
+</li>
 </ol>
-<h2 id="jdk安装"><a href="#jdk安装" class="headerlink" title="jdk安装"></a>jdk安装</h2><pre><code>服务器必须安装jdk1.8版本
-</code></pre><h2 id="elb网关组件安装"><a href="#elb网关组件安装" class="headerlink" title="elb网关组件安装"></a>elb网关组件安装</h2><h1 id="版本包部署"><a href="#版本包部署" class="headerlink" title="版本包部署"></a>版本包部署</h1><p><strong>版本包采用jar包部署</strong>，内置tomcat容器，无需再安装应用服务器</p>
+<h3 id="jdk安装"><a href="#jdk安装" class="headerlink" title="jdk安装"></a>jdk安装</h3><pre><code>服务器必须安装jdk1.8版本
+</code></pre><h3 id="elb网关组件安装"><a href="#elb网关组件安装" class="headerlink" title="elb网关组件安装"></a>elb网关组件安装</h3><h1 id="版本包部署"><a href="#版本包部署" class="headerlink" title="版本包部署"></a>版本包部署</h1><p><strong>版本包采用jar包部署</strong>，内置tomcat容器，无需再安装应用服务器</p>
 <ol>
 <li><p>在应用服务器上建立部署目录</p>
 <blockquote>
-<p>公司测试服务器目录结构(bsci_service_farmer为农户接口服务目录、bsci_service_merchant为客商接口服务目录)<img src="C:\Users\qxjiao\Desktop\QQ截图20181115161059.jpg" alt="QQ截图20181115161059"></p>
+<p><img src="/images/lpht_20181115.jpg" alt="公司测试服务器目录结构(bsci_service_farmer为农户接口服务目录、bsci_service_merchant为客商接口服务目录)"></p>
 </blockquote>
 </li>
 <li><p>将jar包复制到对应目录下</p>
@@ -193,7 +289,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/15/隆平基础服务平台部署文档/" data-id="cjoi1pyuf0000tcjassmpcyiw" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/11/15/隆平基础服务平台部署文档/" data-id="cjpnszrrv0001fsjakkci726u" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/实施/">实施</a></li></ul>
@@ -231,7 +327,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/13/myblog/" data-id="cjoi1lyis0000nkja3fx8y4jk" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/11/13/myblog/" data-id="cjpnszrqc0000fsja1zt5qyx3" class="article-share-link">Share</a>
       
       
     </footer>
@@ -276,7 +372,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/13/hello-world/" data-id="cjoi1lyjt0002nkja1yqe5qmn" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/11/13/hello-world/" data-id="cjpnszrse0002fsjaxyzsrq3t" class="article-share-link">Share</a>
       
       
     </footer>
@@ -338,7 +434,7 @@
       <ul>
         
           <li>
-            <a href="/2018/11/15/隆平基础服务平台部署文档/">隆平基础服务平台部署文档</a>
+            <a href="/2018/11/15/隆平基础服务平台部署文档/">基础服务平台部署文档</a>
           </li>
         
           <li>
@@ -361,7 +457,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2018 John Doe<br>
+      &copy; 2018 jiaoqx<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
